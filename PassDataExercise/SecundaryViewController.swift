@@ -12,6 +12,7 @@ class SecundaryViewController: UIViewController {
     
     var myData = String()
     var mainViewController: MainViewController?
+    var delegate: PassDataDelegate?
 
     let dataLabel: UILabel = {
         let label = UILabel()
@@ -39,6 +40,14 @@ class SecundaryViewController: UIViewController {
         return button
     }()
     
+    let delegateButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("Pass Data (Delegate)", for: .normal)
+        button.backgroundColor = .red
+        button.setTitleColor(.white, for: .normal)
+        return button
+    }()
+    
     let passDataStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
@@ -55,6 +64,7 @@ class SecundaryViewController: UIViewController {
         navigationItem.title = "Secundary ViewController"
         dataLabel.text = myData
         passDataButton.addTarget(self, action: #selector(passDataWithProperties), for: .touchUpInside)
+        delegateButton.addTarget(self, action: #selector(passDataWithDelegate), for: .touchUpInside)
     }
     
     func setLayout() {
@@ -64,6 +74,7 @@ class SecundaryViewController: UIViewController {
         let guide = view.safeAreaLayoutGuide
         passDataStackView.addArrangedSubview(passDataTextField)
         passDataStackView.addArrangedSubview(passDataButton)
+        passDataStackView.addArrangedSubview(delegateButton)
         passDataStackView.topAnchor.constraint(equalTo: dataLabel.bottomAnchor, constant: 20).isActive = true
         passDataStackView.leadingAnchor.constraint(equalTo: guide.leadingAnchor, constant: 10).isActive = true
         passDataStackView.trailingAnchor.constraint(equalTo: guide.trailingAnchor, constant: -10).isActive = true
@@ -81,6 +92,10 @@ class SecundaryViewController: UIViewController {
             alert.addAction(action)
             present(alert, animated: true)
         }
+    }
+    
+    @objc func passDataWithDelegate(_ sender: UIButton) {
+        delegate?.passData(data: "hello")
     }
 
 }

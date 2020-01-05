@@ -8,7 +8,12 @@
 
 import UIKit
 
-class MainViewController: UIViewController {
+class MainViewController: UIViewController, PassDataDelegate {
+    
+    func passData(data: String) {
+        print("my data")
+    }
+    
     
     let secundaryViewController = SecundaryViewController()
     var users = [String]()
@@ -61,7 +66,10 @@ class MainViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setlayout()
+//        properties
         secundaryViewController.mainViewController = self
+//        delegate
+        secundaryViewController.delegate = self
         navigationItem.title = "Main ViewController"
         passDataButton.addTarget(self, action: #selector(passDataWithProperties), for: .touchUpInside)
         showButton.addTarget(self, action: #selector(showAll), for: .touchUpInside)
@@ -106,5 +114,9 @@ class MainViewController: UIViewController {
         print(users)
     }
 
+}
+
+protocol PassDataDelegate {
+    func passData(data: String)
 }
 
