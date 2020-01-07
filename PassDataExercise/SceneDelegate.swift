@@ -20,10 +20,15 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         let windowScene: UIWindowScene = scene as! UIWindowScene
         window = UIWindow(windowScene: windowScene)
-        window?.backgroundColor = .systemBackground
-        let navController = UINavigationController(rootViewController: MainViewController())
-        window?.rootViewController = navController
+        window?.rootViewController = TabBarViewController()
         window?.makeKeyAndVisible()
+        
+//        let windowScene: UIWindowScene = scene as! UIWindowScene
+//        window = UIWindow(windowScene: windowScene)
+//        window?.backgroundColor = .systemBackground
+//        let navController = UINavigationController(rootViewController: MainViewController())
+//        window?.rootViewController = navController
+//        window?.makeKeyAndVisible()
         
         guard let _ = (scene as? UIWindowScene) else { return }
     }
