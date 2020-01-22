@@ -18,17 +18,26 @@ class MainViewController: UIViewController {
         return tableView
     }()
     
+    lazy var addButton: UIBarButtonItem = {
+        let barButton = UIBarButtonItem(image: UIImage(systemName: "plus"), style: UIBarButtonItem.Style.plain, target: self, action: #selector(addUser))
+        return barButton
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         usersTableView.delegate = self
         usersTableView.dataSource = self
         usersTableView.register(UITableViewCell.self, forCellReuseIdentifier: "UsersCell")
         setlayout()
     }
     
+}
+
+extension MainViewController: UITableViewDelegate, UITableViewDataSource {
+    
     func setlayout() {
         navigationItem.title = "Main"
+        navigationItem.rightBarButtonItem = addButton
         view.backgroundColor = .white
         view.addSubview(usersTableView)
         let guide = view.safeAreaLayoutGuide
@@ -37,9 +46,6 @@ class MainViewController: UIViewController {
         usersTableView.topAnchor.constraint(equalTo: guide.topAnchor).isActive = true
         usersTableView.bottomAnchor.constraint(equalTo: guide.bottomAnchor).isActive = true
     }
-}
-
-extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return users.count
@@ -56,6 +62,37 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
         secundaryViewController.mainViewController = self
         secundaryViewController.userIndex = indexPath
         navigationController?.pushViewController(secundaryViewController, animated: true)
+    }
+    
+    @objc func addUser() {
+        let alert = UIAlertController(title: "New User", message: "please add a new User", preferredStyle: .alert)
+        alert.addTextField { (name) in
+            name.placeholder = "Name"
+            name.textAlignment = .left
+        }
+        alert.addTextField { (phone) in
+            phone.placeholder = "Phone Number"
+            phone.textAlignment = .left
+        }
+        alert.addTextField { (address) in
+            address.placeholder = "address"
+            address.textAlignment = .left
+        }
+        let addAction = UIAlertAction(title: "Add", style: .default) { (action) in
+            guard let name = alert.textFields?[0].text else { return }
+            guard let phone = alert.textFields?[1].text else { return }
+            guard let address = alert.textFields?[2].text else { return }
+            if name != "" {
+                let newUser = User(name: name, phoneNumber: phone, address: address)
+                self.users.append(newUser)
+            
+            }
+            self.usersTableView.reloadData()
+        }
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        alert.addAction(addAction)
+        alert.addAction(cancelAction)
+        present(alert, animated: true)
     }
     
 }

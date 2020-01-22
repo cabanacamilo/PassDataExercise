@@ -42,6 +42,14 @@ class SecundaryViewController: UIViewController {
         return button
     }()
     
+    let deleteButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("Delete", for: .normal)
+        button.setTitleColor(.white, for: .normal)
+        button.backgroundColor = .blue
+        return button
+    }()
+    
     let infoStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
@@ -58,8 +66,12 @@ class SecundaryViewController: UIViewController {
         phoneTextField.text = mainViewController?.users[userIndex.row].phoneNumber
         addressTextField.text = mainViewController?.users[userIndex.row].address
         setLayout()
-        editButton.addTarget(self, action: #selector(editInfo), for: .touchUpInside)
+        editButton.addTarget(self, action: #selector(editUser), for: .touchUpInside)
+        deleteButton.addTarget(self, action: #selector(deleteUser), for: .touchUpInside)
     }
+}
+
+extension SecundaryViewController {
     
     func setLayout() {
         navigationItem.title = "Secundary"
@@ -69,16 +81,25 @@ class SecundaryViewController: UIViewController {
         infoStackView.addArrangedSubview(phoneTextField)
         infoStackView.addArrangedSubview(addressTextField)
         infoStackView.addArrangedSubview(editButton)
+        infoStackView.addArrangedSubview(deleteButton)
         let guide = view.safeAreaLayoutGuide
         infoStackView.topAnchor.constraint(equalTo: guide.topAnchor, constant: 10).isActive = true
         infoStackView.leadingAnchor.constraint(equalTo: guide.leadingAnchor, constant: 10).isActive = true
         infoStackView.trailingAnchor.constraint(equalTo: guide.trailingAnchor, constant: -10).isActive = true
     }
     
-    @objc func editInfo() {
+    @objc func editUser() {
         mainViewController?.users[userIndex.row].name = nameTextField.text ?? ""
         mainViewController?.users[userIndex.row].phoneNumber = phoneTextField.text ?? ""
         mainViewController?.users[userIndex.row].address = addressTextField.text ?? ""
+        navigationController?.popViewController(animated: true)
+        dismiss(animated: true) {
+            self.mainViewController?.usersTableView.reloadData()
+        }
+    }
+    
+    @objc func deleteUser() {
+        mainViewController?.users.remove(at: userIndex.row)
         navigationController?.popViewController(animated: true)
         dismiss(animated: true) {
             self.mainViewController?.usersTableView.reloadData()
